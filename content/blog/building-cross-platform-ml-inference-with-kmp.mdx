@@ -1,0 +1,73 @@
+export const metadata = {
+  title: "Building Cross-Platform ML Inference with KMP",
+  excerpt:
+    "A deep dive into abstracting TFLite and CoreML behind a unified Kotlin Multiplatform API.",
+  date: "2025-01-15",
+  tag: "Technical",
+  readTime: "8 min read",
+  slug: "building-cross-platform-ml-inference-with-kmp",
+};
+
+# Building Cross-Platform ML Inference with KMP
+
+Running ML models on mobile devices is not new. What's still painful is doing it **consistently** across Android and iOS without duplicating everything.
+
+This post walks through how I built a unified inference layer using Kotlin Multiplatform — one API surface, two platform backends.
+
+## The Problem
+
+Every mobile ML project starts the same way. You train a model, export it, then realize you need to write inference code twice:
+
+- **Android**: TensorFlow Lite, load `.tflite` model, manage interpreters, handle input/output buffers
+- **iOS**: Core ML, convert to `.mlmodel`, deal with `MLMultiArray`, manage predictions
+
+The model is the same. The preprocessing is the same. The postprocessing is the same. But the code? Completely different.
+
+## Why KMP
+
+Kotlin Multiplatform lets you share business logic while keeping platform-specific implementations where they need to be. For ML inference, this means:
+
+- **Shared**: Model configuration, preprocessing, postprocessing, result types
+- **Platform-specific**: The actual inference call (TFLite on Android, CoreML on iOS)
+
+The key insight is that the inference call itself is a tiny part of the pipeline. Most of the work — image resizing, normalization, NMS, label mapping — is pure logic that doesn't need platform APIs.
+
+## Architecture
+
+The design uses Kotlin's `expect`/`actual` mechanism:
+
+```kotlin
+// Shared
+expect class ModelInterpreter {
+    fun predict(input: FloatArray): FloatArray
+}
+
+// Android
+actual class ModelInterpreter {
+    private val interpreter = Interpreter(modelBuffer)
+    actual fun predict(input: FloatArray): FloatArray { ... }
+}
+
+// iOS
+actual class ModelInterpreter {
+    private val model = MLModel(contentsOf: modelUrl)
+    actual fun predict(input: FloatArray): FloatArray { ... }
+}
+```
+
+The shared module defines the full pipeline — from raw camera frame to structured detection results. Platform modules only implement the thin interpreter wrapper.
+
+## Results
+
+After extracting the shared logic:
+
+- **~70% code sharing** across platforms
+- Single test suite for preprocessing/postprocessing
+- New model integration takes hours, not days
+- Bug fixes apply everywhere at once
+
+## Takeaways
+
+KMP isn't a silver bullet. The platform-specific parts still need attention — memory management on iOS, thread handling on Android. But for the parts that are genuinely the same across platforms? Write them once.
+
+The best abstraction is the one that matches reality. ML inference pipelines are 80% math and 20% platform plumbing. KMP lets you treat them that way.

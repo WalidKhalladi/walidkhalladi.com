@@ -1,0 +1,68 @@
+export const metadata = {
+  title: "Architecture Decisions Behind Chantik",
+  excerpt:
+    "Why I chose certain patterns and trade-offs when building a production construction management app.",
+  date: "2025-02-10",
+  tag: "Case Study",
+  readTime: "6 min read",
+  slug: "architecture-decisions-behind-chantik",
+};
+
+# Architecture Decisions Behind Chantik
+
+Chantik is a construction site management app I built solo — from first commit to production. This post isn't a tutorial. It's the reasoning behind the choices I made, and what I'd do differently.
+
+## Context
+
+Construction sites need simple tools. The people using this app are on-site, often with gloves on, dealing with dust and sun glare. They need to:
+
+- Track daily progress with photos
+- Coordinate between teams
+- Report issues with location context
+- Access everything offline
+
+This shaped every technical decision.
+
+## Offline-First, Not Offline-Capable
+
+There's a difference. "Offline-capable" means the app gracefully degrades. "Offline-first" means the app works fully offline and syncs when it can.
+
+I chose offline-first because construction sites often have poor connectivity. The local database (Room) is the source of truth. Sync is a background concern.
+
+This means:
+
+- **Every write goes to Room first**, then queues for sync
+- **Conflict resolution** follows last-write-wins with server timestamps
+- **Media uploads** happen in a background WorkManager chain — retry-aware, battery-conscious
+
+The trade-off? More complexity upfront. But users never see a loading spinner for their own data.
+
+## MVVM with a Twist
+
+Standard MVVM (ViewModel → Repository → DataSource) works well for most screens. But some features — like the photo capture → annotate → upload flow — don't fit neatly into a single ViewModel.
+
+For these, I used a coordinator pattern: a shared state holder that multiple ViewModels observe. The coordinator owns the multi-step flow logic, and individual ViewModels handle their screen-specific concerns.
+
+## Jetpack Compose All The Way
+
+I started with Compose from day one. No XML layouts, no fragments, no navigation component. Just Compose screens with a simple navigation wrapper.
+
+Benefits:
+
+- **Faster iteration** — change UI, see it instantly
+- **Less boilerplate** — no view binding, no layout inflation
+- **Better state management** — UI is a function of state, period
+
+The cost was a steeper learning curve for some patterns (like nested scrolling and keyboard handling), but the long-term velocity gain was worth it.
+
+## What I'd Change
+
+- **Sync logic**: I'd invest more in a proper CRDT-based sync instead of last-write-wins. For multi-user scenarios, timestamp ordering isn't enough.
+- **Testing**: I'd write more integration tests from the start. Unit tests caught logic bugs, but the sync + Room + network integration is where the real issues lived.
+- **Modularization**: The app grew into a single module. Breaking it into feature modules earlier would have improved build times and enforced better boundaries.
+
+## The Lesson
+
+Architecture is about trade-offs, not best practices. Every choice I made optimized for solo development speed and offline reliability. A team of five would make different choices — and they'd be right too.
+
+The best architecture is the one that ships.
