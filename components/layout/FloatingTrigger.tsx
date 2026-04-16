@@ -10,7 +10,7 @@ export default function FloatingTrigger({ onClick }: FloatingTriggerProps) {
   return (
     <motion.button
       onClick={onClick}
-      className="fixed bottom-8 left-8 z-50 h-12 flex items-center gap-3 px-5 group cursor-hover"
+      className="fixed bottom-8 left-8 z-50 h-12 hidden md:flex items-center gap-3 px-5 group cursor-hover"
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}

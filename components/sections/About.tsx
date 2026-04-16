@@ -50,7 +50,7 @@ export default function About({ onNavigate: _onNavigate }: AboutProps) {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="flex items-center justify-center h-full"
+      className="flex items-start md:items-center justify-center min-h-full pt-4 md:pt-0"
     >
       <div className="max-w-2xl w-full">
         <motion.p

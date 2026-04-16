@@ -27,7 +27,7 @@ const PROJECTS = [
 
 export default function Projects({ onNavigate: _onNavigate }: ProjectsProps) {
   return (
-    <SectionTransition className="flex items-center justify-center h-full">
+    <SectionTransition className="flex items-start md:items-center justify-center min-h-full pt-4 md:pt-0">
       <div className="max-w-4xl w-full">
         <SectionItem>
           <p className="text-muted text-sm font-mono tracking-wider mb-4">

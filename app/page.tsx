@@ -102,6 +102,39 @@ export default function Home() {
     return () => window.removeEventListener("wheel", handleWheel);
   }, [activeSection, navigate, navOpen]);
 
+  // Touch swipe navigation
+  const touchStart = useRef(0);
+  useEffect(() => {
+    if (navOpen) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStart.current = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const deltaY = touchStart.current - e.changedTouches[0].clientY;
+      if (Math.abs(deltaY) < 50) return;
+
+      const ids = NAV_ITEMS.map((item) => item.id);
+      const currentIndex = ids.indexOf(activeSection);
+
+      if (deltaY > 0) {
+        const next = Math.min(currentIndex + 1, ids.length - 1);
+        navigate(ids[next]);
+      } else {
+        const prev = Math.max(currentIndex - 1, 0);
+        navigate(ids[prev]);
+      }
+    };
+
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [activeSection, navigate, navOpen]);
+
   return (
     <>
       <CustomCursor />
