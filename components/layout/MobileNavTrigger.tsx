@@ -16,7 +16,8 @@ export default function MobileNavTrigger({ onClick }: MobileNavTriggerProps) {
       transition={{ delay: 0.5, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       aria-label="Open navigation"
     >
-      <span className="text-heading text-xs font-bold tracking-tight">WK</span>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/images/logo.png" alt="WK" width={18} height={18} />
       <span className="w-px h-3 bg-border" />
       <span className="text-muted text-xs font-mono">Menu</span>
     </motion.button>

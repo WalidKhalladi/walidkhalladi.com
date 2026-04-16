@@ -77,6 +77,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             src="/images/pixel_new_me.png"
             alt="Walid Khalladi"
             fill
+            sizes="(max-width: 768px) 144px, (max-width: 1024px) 256px, 320px"
             className="object-cover rounded-2xl grayscale"
             priority
           />

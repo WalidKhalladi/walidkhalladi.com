@@ -21,6 +21,7 @@ const PROJECTS = [
     stack: ["Kotlin", "Jetpack Compose", "MVVM", "Room", "Retrofit"],
     highlight: "In Production",
     icon: "CH",
+    url: "https://chantik.tn",
   },
 ];
 
@@ -49,50 +50,56 @@ export default function Projects({ onNavigate: _onNavigate }: ProjectsProps) {
             <motion.div
               key={project.title}
               variants={staggerItem}
-              className="group cursor-hover"
+              className="group"
             >
-              <TiltCard className="relative border border-border rounded-xl p-6 md:p-8 transition-all duration-300 hover:border-accent/20 hover:shadow-[0_0_30px_var(--accent-glow)]">
-                <div className="flex gap-5">
-                  {/* Project icon */}
-                  <div className="hidden md:flex w-14 h-14 shrink-0 items-center justify-center rounded-lg border border-border bg-surface text-heading text-sm font-mono group-hover:border-accent/30 transition-colors">
-                    {project.icon}
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-3">
-                      <div>
-                        <h3 className="text-heading text-2xl font-semibold tracking-tight group-hover:text-heading transition-colors">
-                          {project.title}
-                        </h3>
-                        <p className="text-muted text-sm font-light">{project.role}</p>
-                      </div>
-                      <span className="text-xs font-mono text-muted border border-border px-2.5 py-1 rounded self-start group-hover:text-accent group-hover:border-accent/30 transition-colors">
-                        {project.highlight}
-                      </span>
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <TiltCard className="relative border border-border rounded-xl p-6 md:p-8 transition-all duration-300 hover:border-accent/20 hover:shadow-[0_0_30px_var(--accent-glow)]">
+                  <div className="flex gap-5">
+                    {/* Project icon */}
+                    <div className="hidden md:flex w-14 h-14 shrink-0 items-center justify-center rounded-lg border border-border bg-surface text-heading text-sm font-mono group-hover:border-accent/30 transition-colors">
+                      {project.icon}
                     </div>
 
-                    <p className="text-foreground font-light text-[15px] leading-relaxed mb-5 max-w-2xl tracking-[0.01em]">
-                      {project.description}
-                    </p>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex flex-wrap gap-2">
-                        {project.stack.map((tech) => (
-                          <span
-                            key={tech}
-                            className="text-xs font-mono text-muted border border-border px-2 py-0.5 rounded"
-                          >
-                            {tech}
-                          </span>
-                        ))}
+                    <div className="flex-1">
+                      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-3">
+                        <div>
+                          <h3 className="text-heading text-2xl font-semibold tracking-tight group-hover:text-heading transition-colors">
+                            {project.title}
+                          </h3>
+                          <p className="text-muted text-sm font-light">{project.role}</p>
+                        </div>
+                        <span className="text-xs font-mono text-muted border border-border px-2.5 py-1 rounded self-start group-hover:text-accent group-hover:border-accent/30 transition-colors">
+                          {project.highlight}
+                        </span>
                       </div>
-                      <span className="text-muted text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 ml-4 shrink-0">
-                        Read case study &rarr;
-                      </span>
+
+                      <p className="text-foreground font-light text-[15px] leading-relaxed mb-5 max-w-2xl tracking-[0.01em]">
+                        {project.description}
+                      </p>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex flex-wrap gap-2">
+                          {project.stack.map((tech) => (
+                            <span
+                              key={tech}
+                              className="text-xs font-mono text-muted border border-border px-2 py-0.5 rounded"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                        <span className="text-muted text-sm group-hover:text-accent transition-colors duration-300 ml-4 shrink-0">
+                          Visit site &rarr;
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </TiltCard>
+                </TiltCard>
+              </a>
             </motion.div>
           ))}
         </div>

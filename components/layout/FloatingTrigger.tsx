@@ -26,10 +26,15 @@ export default function FloatingTrigger({ onClick }: FloatingTriggerProps) {
       />
       {/* Inner background */}
       <div className="absolute inset-[1px] rounded-full bg-background" />
-      {/* WK + Menu */}
-      <span className="relative text-heading text-sm font-bold tracking-tight">
-        WK
-      </span>
+      {/* Logo + Menu */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/logo.png"
+        alt="WK"
+        width={20}
+        height={20}
+        className="relative"
+      />
       <span className="relative w-px h-3.5 bg-border" />
       <span className="relative text-muted text-xs font-mono group-hover:text-heading transition-colors duration-300">
         Menu

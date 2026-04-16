@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { SectionId } from "@/lib/constants";
 import { NAV_ITEMS } from "@/lib/constants";
 import { useDirection } from "@/hooks/useDirection";
@@ -11,15 +11,8 @@ import EdgeIndicator from "@/components/layout/EdgeIndicator";
 import NavigationOverlay from "@/components/layout/NavigationOverlay";
 import CustomCursor from "@/components/ui/CustomCursor";
 
-function getInitialSection(): SectionId {
-  if (typeof window === "undefined") return "home";
-  const hash = window.location.hash.replace("#", "");
-  const valid = NAV_ITEMS.find((item) => item.id === hash);
-  return valid ? valid.id : "home";
-}
-
 export default function Home() {
-  const [activeSection, setActiveSection] = useState<SectionId>(getInitialSection);
+  const [activeSection, setActiveSection] = useState<SectionId>("home");
   const [navOpen, setNavOpen] = useState(false);
   const direction = useDirection(activeSection);
 
@@ -80,6 +73,33 @@ export default function Home() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeSection, navigate, navOpen]);
+
+  // Scroll wheel navigation
+  const lastWheel = useRef(0);
+  useEffect(() => {
+    if (navOpen) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      const now = Date.now();
+      if (now - lastWheel.current < 600) return;
+      if (Math.abs(e.deltaY) < 30) return;
+
+      lastWheel.current = now;
+      const ids = NAV_ITEMS.map((item) => item.id);
+      const currentIndex = ids.indexOf(activeSection);
+
+      if (e.deltaY > 0) {
+        const next = Math.min(currentIndex + 1, ids.length - 1);
+        navigate(ids[next]);
+      } else {
+        const prev = Math.max(currentIndex - 1, 0);
+        navigate(ids[prev]);
+      }
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: true });
+    return () => window.removeEventListener("wheel", handleWheel);
   }, [activeSection, navigate, navOpen]);
 
   return (
