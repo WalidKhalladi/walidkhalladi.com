@@ -90,7 +90,7 @@ export default function RootLayout({
               },
               sameAs: [
                 "https://github.com/WalidKhalladi",
-                "https://linkedin.com/in/walidkhalladi",
+                "https://www.linkedin.com/in/walid-khalladi/",
               ],
             }),
           }}

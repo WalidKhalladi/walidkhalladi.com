@@ -22,7 +22,7 @@ const LINKS = [
   {
     number: "02",
     label: "LinkedIn",
-    href: "https://linkedin.com/in/walidkhalladi",
+    href: "https://www.linkedin.com/in/walid-khalladi/",
     external: true,
   },
 ];
